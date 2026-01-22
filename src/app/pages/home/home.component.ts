@@ -1,7 +1,7 @@
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {Component, OnInit} from '@angular/core';
-import { Router } from '@angular/router';
 import Chart from 'chart.js/auto';
+import { Component, OnInit } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -13,10 +13,10 @@ export class HomeComponent implements OnInit {
   public pieChart!: Chart<"pie", number[], string>;
   public totalCountries: number = 0
   public totalJOs: number = 0
-  public error!:string
+  public error!: string
   titlePage: string = "Medals per Country";
 
-  constructor(private router: Router, private http:HttpClient) { }
+  constructor(private router: Router, private http: HttpClient) { }
 
   ngOnInit() {
     this.http.get<any[]>(this.olympicUrl).pipe().subscribe(
@@ -31,7 +31,7 @@ export class HomeComponent implements OnInit {
           this.buildPieChart(countries, sumOfAllMedalsYears);
         }
       },
-      (error:HttpErrorResponse) => {
+      (error: HttpErrorResponse) => {
         console.log(`erreur : ${error}`);
         this.error = error.message
       }
