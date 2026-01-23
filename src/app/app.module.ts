@@ -1,15 +1,30 @@
-import { provideHttpClient } from '@angular/common/http';
-import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { AppRoutingModule } from './app-routing.module';
+import { LineChartComponent } from 'src/app/components/line-chart/line-chart.component';
+import { NgModule } from '@angular/core';
+import { PieChartComponent } from 'src/app/components/pie-chart/pie-chart.component';
+import { StatsCardComponent } from 'src/app/components/stats-card/stats-card.component';
+import { provideHttpClient } from '@angular/common/http';
+
 import { AppComponent } from './app.component';
+import { AppRoutingModule } from './app-routing.module';
+import { CountryComponent } from './pages/country/country.component';
 import { HomeComponent } from './pages/home/home.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
-import { CountryComponent } from "./pages/country/country.component";
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent, NotFoundComponent, CountryComponent],
-  imports: [BrowserModule, AppRoutingModule],
+  declarations: [
+    AppComponent,
+    HomeComponent,
+    NotFoundComponent,
+    CountryComponent,
+  ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    PieChartComponent,
+    LineChartComponent,
+    StatsCardComponent,
+  ],
   providers: [provideHttpClient()],
   bootstrap: [AppComponent],
 })

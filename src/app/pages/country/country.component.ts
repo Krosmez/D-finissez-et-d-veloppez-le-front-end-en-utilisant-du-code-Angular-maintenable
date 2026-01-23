@@ -1,4 +1,3 @@
-import Chart from 'chart.js/auto';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
@@ -11,12 +10,14 @@ import { Olympic } from 'src/app/models/Olympic';
 })
 export class CountryComponent implements OnInit {
   private olympicUrl = './assets/mock/olympic.json';
-  public lineChart!: Chart<'line', string[], number>;
   public titlePage: string = '';
   public totalEntries: number = 0;
   public totalMedals: number = 0;
   public totalAthletes: number = 0;
   public error!: string;
+
+  public medals: string[] = [];
+  public years: number[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -43,13 +44,13 @@ export class CountryComponent implements OnInit {
             if (selectedCountry) {
               this.titlePage = selectedCountry.country;
               this.totalEntries = selectedCountry.participations.length;
-              const years = selectedCountry.participations.map(
+              this.years = selectedCountry.participations.map(
                 (participation) => participation.year,
               );
-              const medals = selectedCountry.participations.map(
+              this.medals = selectedCountry.participations.map(
                 (participation) => participation.medalsCount.toString(),
               );
-              this.totalMedals = medals.reduce(
+              this.totalMedals = this.medals.reduce(
                 (accumulator: number, item: string) =>
                   accumulator + parseInt(item),
                 0,
@@ -62,7 +63,6 @@ export class CountryComponent implements OnInit {
                   accumulator + parseInt(item),
                 0,
               );
-              this.buildChart(years, medals);
             }
           }
         },
@@ -71,25 +71,5 @@ export class CountryComponent implements OnInit {
           this.error = error.message;
         },
       );
-  }
-
-  buildChart(years: number[], medals: string[]) {
-    const lineChart = new Chart('countryChart', {
-      type: 'line',
-      data: {
-        labels: years,
-        datasets: [
-          {
-            label: 'medals',
-            data: medals,
-            backgroundColor: '#0b868f',
-          },
-        ],
-      },
-      options: {
-        aspectRatio: 2.5,
-      },
-    });
-    this.lineChart = lineChart;
   }
 }
