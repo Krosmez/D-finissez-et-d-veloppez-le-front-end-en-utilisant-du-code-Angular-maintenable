@@ -1,11 +1,13 @@
 import Chart from 'chart.js/auto';
 import {
+  AfterViewInit,
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
-  OnInit,
   Output,
+  SimpleChanges,
 } from '@angular/core';
 
 @Component({
@@ -15,16 +17,30 @@ import {
   templateUrl: './pie-chart.component.html',
   styleUrl: './pie-chart.component.scss',
 })
-export class PieChartComponent implements OnInit, OnDestroy {
+export class PieChartComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() countries: string[] = [];
   @Input() medalsData: number[] = [];
   @Input() chartId: string = 'pieChart';
   @Output() pieClick = new EventEmitter<string>();
 
   private chart!: Chart<'pie', number[], string>;
+  private viewInitialized = false;
 
-  ngOnInit(): void {
-    this.buildPieChart();
+  ngAfterViewInit(): void {
+    // this.buildPieChart();
+    this.viewInitialized = true;
+    if (this.medalsData.length > 0) {
+      this.buildPieChart();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.viewInitialized && changes['medalsData']) {
+      if (this.chart) {
+        this.chart.destroy();
+      }
+      this.buildPieChart();
+    }
   }
 
   ngOnDestroy(): void {
@@ -75,5 +91,6 @@ export class PieChartComponent implements OnInit, OnDestroy {
         },
       },
     });
+    console.log(this.chart);
   }
 }

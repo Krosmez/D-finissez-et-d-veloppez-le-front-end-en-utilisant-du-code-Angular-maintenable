@@ -1,4 +1,4 @@
-import { Participation } from "./participation";
+import { Participation } from './Participation';
 
 export interface Olympic {
   id: number;

@@ -1,5 +1,13 @@
 import Chart from 'chart.js/auto';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 
 @Component({
   selector: 'app-line-chart',
@@ -8,15 +16,29 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
   templateUrl: './line-chart.component.html',
   styleUrl: './line-chart.component.scss',
 })
-export class LineChartComponent implements OnInit, OnDestroy {
+export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() years: number[] = [];
   @Input() medalsData: string[] = [];
   @Input() chartId: string = 'lineChart';
 
   private chart!: Chart<'line', string[], number>;
+  private viewInitialized = false;
 
-  ngOnInit(): void {
-    this.buildChart();
+  ngAfterViewInit(): void {
+    // this.buildPieChart();
+    this.viewInitialized = true;
+    if (this.medalsData.length > 0) {
+      this.buildChart();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.viewInitialized && changes['medalsData']) {
+      if (this.chart) {
+        this.chart.destroy();
+      }
+      this.buildChart();
+    }
   }
 
   ngOnDestroy(): void {

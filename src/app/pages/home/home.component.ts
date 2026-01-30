@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { DataService } from 'src/app/services/data.service';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Olympic } from 'src/app/models/Olympic';
 import { Router } from '@angular/router';
 
@@ -9,7 +10,6 @@ import { Router } from '@angular/router';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  private olympicUrl = './assets/mock/olympic.json';
   public totalCountries: number = 0;
   public totalJOs: number = 0;
   public error!: string;
@@ -20,50 +20,45 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private http: HttpClient,
+    private dataService: DataService,
   ) {}
 
   ngOnInit() {
-    this.http
-      .get<Olympic[]>(this.olympicUrl)
-      .pipe()
-      .subscribe(
-        (data: Olympic[]) => {
-          if (data && data.length > 0) {
-            this.totalJOs = Array.from(
-              new Set(
-                data
-                  .map((olympic: Olympic) =>
-                    olympic.participations.map(
-                      (participation) => participation.year,
-                    ),
-                  )
-                  .flat(),
-              ),
-            ).length;
+    this.dataService.getOlympics().subscribe(
+      (data: Olympic[]) => {
+        if (data && data.length > 0) {
+          this.totalJOs = Array.from(
+            new Set(
+              data
+                .map((olympic: Olympic) =>
+                  olympic.participations.map(
+                    (participation) => participation.year,
+                  ),
+                )
+                .flat(),
+            ),
+          ).length;
 
-            this.countries = data.map((olympic: Olympic) => olympic.country);
+          this.countries = data.map((olympic: Olympic) => olympic.country);
 
-            this.totalCountries = this.countries.length;
+          this.totalCountries = this.countries.length;
 
-            const medals = data.map((olympic: Olympic) =>
-              olympic.participations.map(
-                (participation) => participation.medalsCount,
-              ),
-            );
-            this.medalsData = medals.map((medalCounts) =>
-              medalCounts.reduce(
-                (acc: number, count: number) => acc + count,
-                0,
-              ),
-            );
-          }
-        },
+          const medals = data.map((olympic: Olympic) =>
+            olympic.participations.map(
+              (participation) => participation.medalsCount,
+            ),
+          );
 
-        (error: HttpErrorResponse) => {
-          this.error = error.message;
-        },
-      );
+          this.medalsData = medals.map((medalCounts) =>
+            medalCounts.reduce((acc: number, count: number) => acc + count, 0),
+          );
+        }
+      },
+
+      (error: HttpErrorResponse) => {
+        this.error = error.message;
+      },
+    );
   }
 
   onPieClick(country: string): void {

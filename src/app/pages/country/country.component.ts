@@ -1,6 +1,7 @@
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { DataService } from 'src/app/services/data.service';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Olympic } from 'src/app/models/Olympic';
 
 @Component({
@@ -9,7 +10,6 @@ import { Olympic } from 'src/app/models/Olympic';
   styleUrls: ['./country.component.scss'],
 })
 export class CountryComponent implements OnInit {
-  private olympicUrl = './assets/mock/olympic.json';
   public titlePage: string = '';
   public totalEntries: number = 0;
   public totalMedals: number = 0;
@@ -22,7 +22,7 @@ export class CountryComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private http: HttpClient,
+    private dataService: DataService,
   ) {}
 
   ngOnInit() {
@@ -32,38 +32,32 @@ export class CountryComponent implements OnInit {
       (param: ParamMap) => (countryName = param.get('countryName')),
     );
 
-    this.http
-      .get<Olympic[]>(this.olympicUrl)
-      .pipe()
-      .subscribe(
+    if (countryName) {
+      this.dataService.getOlympicsByCountry(countryName).subscribe(
         (data: Olympic[]) => {
           if (data && data.length > 0) {
-            const selectedCountry = data.find(
-              (olympic: Olympic) => olympic.country === countryName,
+            const selectedCountry = data[0]; // Since filtered, take the first (and only) item
+            this.titlePage = selectedCountry.country;
+            this.totalEntries = selectedCountry.participations.length;
+            this.years = selectedCountry.participations.map(
+              (participation) => participation.year,
             );
-            if (selectedCountry) {
-              this.titlePage = selectedCountry.country;
-              this.totalEntries = selectedCountry.participations.length;
-              this.years = selectedCountry.participations.map(
-                (participation) => participation.year,
-              );
-              this.medals = selectedCountry.participations.map(
-                (participation) => participation.medalsCount.toString(),
-              );
-              this.totalMedals = this.medals.reduce(
-                (accumulator: number, item: string) =>
-                  accumulator + parseInt(item),
-                0,
-              );
-              const nbAthletes = selectedCountry.participations.map(
-                (participation) => participation.athleteCount.toString(),
-              );
-              this.totalAthletes = nbAthletes.reduce(
-                (accumulator: number, item: string) =>
-                  accumulator + parseInt(item),
-                0,
-              );
-            }
+            this.medals = selectedCountry.participations.map((participation) =>
+              participation.medalsCount.toString(),
+            );
+            this.totalMedals = this.medals.reduce(
+              (accumulator: number, item: string) =>
+                accumulator + parseInt(item),
+              0,
+            );
+            const nbAthletes = selectedCountry.participations.map(
+              (participation) => participation.athleteCount.toString(),
+            );
+            this.totalAthletes = nbAthletes.reduce(
+              (accumulator: number, item: string) =>
+                accumulator + parseInt(item),
+              0,
+            );
           }
         },
 
@@ -71,5 +65,6 @@ export class CountryComponent implements OnInit {
           this.error = error.message;
         },
       );
+    }
   }
 }
