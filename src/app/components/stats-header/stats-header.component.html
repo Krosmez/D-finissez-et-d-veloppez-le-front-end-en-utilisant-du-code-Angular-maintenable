@@ -4,10 +4,8 @@
   </div>
   <div class="split">
     <div *ngFor="let stat of stats" class="stat-card">
-      <app-stats-card
-        [statsTitle]="stat.title"
-        [statsData]="stat.data"
-      ></app-stats-card>
+      <p>{{ stat.title }}</p>
+      <p>{{ stat.data }}</p>
     </div>
   </div>
 </div>
