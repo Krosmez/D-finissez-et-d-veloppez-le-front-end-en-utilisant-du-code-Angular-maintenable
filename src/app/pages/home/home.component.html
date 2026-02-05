@@ -1,12 +1,19 @@
-<h2>Olympic games app</h2>
-<hr />
-<div>
-  <app-stats-header [titlePage]="titlePage" [stats]="statsInputs">
-  </app-stats-header>
-  <app-pie-chart
-    chartId="DashboardPieChart"
-    [countries]="countries"
-    [medalsData]="medalsData"
-    (pieClick)="onPieClick($event)"
-  ></app-pie-chart>
+<div class="container">
+  <header>
+    <h2>Olympic games app</h2>
+    <hr />
+  </header>
+  <div class="content-container">
+    <app-stats-header [titlePage]="titlePage" [stats]="statsInputs">
+    </app-stats-header>
+    <app-pie-chart
+      chartId="DashboardPieChart"
+      [countries]="countries"
+      [medalsData]="medalsData"
+      (pieClick)="onPieClick($event)"
+    ></app-pie-chart>
+    <div class="home-section">
+      <p class="home-text">Texte</p>
+    </div>
+  </div>
 </div>

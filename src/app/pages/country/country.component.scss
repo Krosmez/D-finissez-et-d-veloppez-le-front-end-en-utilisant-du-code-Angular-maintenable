@@ -1,19 +1,37 @@
+@import "../../../variables";
 
-.wrapper-container {
-    display: flex;
-    justify-content: center;
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: $spacing-small;
+  padding: $spacing-small $spacing-medium;
+  background-color: transparent;
+  border: 2px solid $primary-color;
+  border-radius: 8px;
+  color: $primary-color;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 10;
+  text-decoration: none;
+
+  &:hover {
+    background-color: $primary-color;
+    color: white;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
 }
 
-.container {
-    width: 50%;
-    h2{
-        text-align: center;
-        color: gray;
-    }
-}
+.chart-container {
+  width: 100%;
+  margin-inline: auto;
 
-@media screen and (max-width: 1000px) {
-    .container {
-        width: 100%;
-    }
+  h2 {
+    text-align: center;
+    color: $text-color-light;
+  }
 }

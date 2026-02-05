@@ -1,9 +1,9 @@
-<div>
+<div class="top-page-container">
   <div class="center">
-    <div>{{ titlePage }}</div>
+    <div class="title">{{ titlePage }}</div>
   </div>
   <div class="split">
-    <div *ngFor="let stat of stats">
+    <div *ngFor="let stat of stats" class="stat-card">
       <app-stats-card
         [statsTitle]="stat.title"
         [statsData]="stat.data"

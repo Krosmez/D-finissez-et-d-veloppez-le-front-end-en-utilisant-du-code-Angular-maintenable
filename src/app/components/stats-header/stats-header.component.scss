@@ -1,0 +1,54 @@
+@import "../../../variables";
+
+.top-page-container {
+  margin-bottom: $spacing-large;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  margin: $spacing-small;
+
+  .title {
+    background: $primary-color;
+    padding: $spacing-medium;
+    border-radius: $border-radius;
+    color: $white;
+    font-size: 18px;
+    font-weight: bold;
+  }
+}
+
+.split {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: $spacing-large;
+  margin: $spacing-small;
+}
+
+.stat-card {
+  padding: $spacing-medium;
+  border: solid $primary-color 1px;
+  border-radius: $border-radius;
+  color: $text-color-light;
+  margin: 0px;
+
+  p {
+    text-align: center;
+    margin: 0;
+  }
+
+  p:last-child {
+    font-weight: bold;
+    color: $text-color-dark;
+  }
+}
+
+@media screen and (max-width: #{$breakpoint-desktop - 1px}) {
+  .stat-card {
+    width: 100%;
+    max-width: 400px;
+  }
+}
