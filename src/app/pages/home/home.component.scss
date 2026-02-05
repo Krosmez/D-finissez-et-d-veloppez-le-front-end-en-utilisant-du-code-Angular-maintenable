@@ -20,7 +20,6 @@
   gap: $spacing-large;
 }
 
-// Responsive design
 @media screen and (max-width: $breakpoint-mobile) {
   .home-section {
     margin-bottom: $spacing-medium;

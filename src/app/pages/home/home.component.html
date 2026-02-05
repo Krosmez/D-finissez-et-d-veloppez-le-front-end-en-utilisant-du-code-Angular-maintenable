@@ -3,21 +3,36 @@
     <h2>Olympic games app</h2>
     <hr />
   </header>
-  <div class="content-container">
-    <app-stats-header [titlePage]="titlePage" [stats]="statsInputs">
-    </app-stats-header>
-    <app-pie-chart
-      chartId="DashboardPieChart"
-      [countries]="countries"
-      [medalsData]="medalsData"
-      (pieClick)="onPieClick($event)"
-    ></app-pie-chart>
-    <div class="home-section">
-      <p class="home-text">
-        Discover the nations' performances, their medals, and immerse yourself
-        in Olympic history at a glance. The perfect tool for sports and
-        competition enthusiasts!
-      </p>
+
+  <app-loading
+    *ngIf="isLoading"
+    message="Loading Olympic data..."
+  ></app-loading>
+
+  <div *ngIf="isError && !isLoading" class="error-container">
+    <div class="error-icon">❌</div>
+    <h2 class="error-title">Error Loading Data</h2>
+    <p class="error-message">{{ error }}</p>
+    <button class="retry-button" (click)="retryLoad()">Retry</button>
+  </div>
+
+  <div *ngIf="!isLoading && !isError">
+    <div class="content-container">
+      <app-stats-header [titlePage]="titlePage" [stats]="statsInputs">
+      </app-stats-header>
+      <app-pie-chart
+        chartId="DashboardPieChart"
+        [countries]="countries"
+        [medalsData]="medalsData"
+        (pieClick)="onPieClick($event)"
+      ></app-pie-chart>
+      <div class="home-section">
+        <p class="home-text">
+          Discover the nations' performances, their medals, and immerse yourself
+          in Olympic history at a glance. The perfect tool for sports and
+          competition enthusiasts!
+        </p>
+      </div>
     </div>
   </div>
 </div>

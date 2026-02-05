@@ -15,10 +15,13 @@ export class CountryComponent implements OnInit {
   public totalMedals: number = 0;
   public totalAthletes: number = 0;
   public error!: string;
+  public isError: boolean = false;
   public statsInputs: { title: string; data: number }[] = [];
 
   public medals: string[] = [];
   public years: number[] = [];
+
+  public isLoading: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -38,13 +41,16 @@ export class CountryComponent implements OnInit {
   }
 
   private loadCountryData(countryName: string): void {
+    this.isLoading = true;
     this.dataService.getOlympicsByCountry(countryName).subscribe(
       (data: Olympic[]) => {
         if (data && data.length > 0) {
+          this.isLoading = false;
           this.setCountryData(data[0]);
         }
       },
       (error: HttpErrorResponse) => {
+        this.isLoading = false;
         this.error = error.message;
       },
     );

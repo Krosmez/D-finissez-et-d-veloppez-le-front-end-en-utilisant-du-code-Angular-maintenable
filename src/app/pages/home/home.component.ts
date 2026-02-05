@@ -13,11 +13,13 @@ export class HomeComponent implements OnInit {
   public totalCountries: number = 0;
   public totalJOs: number = 0;
   public error!: string;
+  public isError: boolean = false;
   public titlePage: string = '';
   public statsInputs: { title: string; data: number }[] = [];
 
   public countries: string[] = [];
   public medalsData: number[] = [];
+  public isLoading: boolean = false;
 
   constructor(
     private router: Router,
@@ -42,14 +44,17 @@ export class HomeComponent implements OnInit {
   }
 
   private loadOlympicsData(): void {
+    this.isLoading = true;
     this.dataService.getOlympics().subscribe(
       (data: Olympic[]) => {
+        this.isLoading = false;
         if (data && data.length > 0) {
           this.setOlympicData(data);
         }
       },
 
       (error: HttpErrorResponse) => {
+        this.isLoading = false;
         this.error = error.message;
       },
     );
@@ -57,5 +62,9 @@ export class HomeComponent implements OnInit {
 
   onPieClick(country: string): void {
     this.router.navigate(['country', country]);
+  }
+
+  retryLoad(): void {
+    this.loadOlympicsData();
   }
 }

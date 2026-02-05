@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { LineChartComponent } from 'src/app/components/line-chart/line-chart.component';
+import { LoadingComponent } from 'src/app/components/loading/loading.component';
 import { NgModule } from '@angular/core';
 import { PieChartComponent } from 'src/app/components/pie-chart/pie-chart.component';
 import { StatsHeaderComponent } from 'src/app/components/stats-header/stats-header.component';
@@ -24,6 +25,7 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
     PieChartComponent,
     LineChartComponent,
     StatsHeaderComponent,
+    LoadingComponent,
   ],
   providers: [provideHttpClient()],
   bootstrap: [AppComponent],
