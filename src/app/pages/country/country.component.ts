@@ -41,7 +41,6 @@ export class CountryComponent implements OnInit {
     this.dataService.getOlympicsByCountry(countryName).subscribe(
       (data: Olympic[]) => {
         if (data && data.length > 0) {
-          console.log(data);
           this.setCountryData(data[0]);
         }
       },
