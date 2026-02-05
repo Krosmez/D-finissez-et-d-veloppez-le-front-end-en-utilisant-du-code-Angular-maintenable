@@ -1,21 +1,8 @@
 <h2>Olympic games app</h2>
 <hr />
 <div>
-  <div>
-    <div class="center">
-      <div>{{ titlePage }}</div>
-    </div>
-    <div class="split">
-      <app-stats-card
-        [statsTitle]="'Number of countries'"
-        [statsData]="totalCountries"
-      ></app-stats-card>
-      <app-stats-card
-        [statsTitle]="'Number of JOs'"
-        [statsData]="totalJOs"
-      ></app-stats-card>
-    </div>
-  </div>
+  <app-stats-header [titlePage]="titlePage" [stats]="statsInputs">
+  </app-stats-header>
   <app-pie-chart
     chartId="DashboardPieChart"
     [countries]="countries"

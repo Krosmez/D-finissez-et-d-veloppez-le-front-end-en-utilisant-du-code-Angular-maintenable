@@ -13,7 +13,8 @@ export class HomeComponent implements OnInit {
   public totalCountries: number = 0;
   public totalJOs: number = 0;
   public error!: string;
-  public titlePage: string = 'Medals per Country';
+  public titlePage: string = '';
+  public statsInputs: { title: string; data: number }[] = [];
 
   public countries: string[] = [];
   public medalsData: number[] = [];
@@ -24,34 +25,27 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.loadOlympicsData();
+  }
+
+  private setOlympicData(data: Olympic[]): void {
+    this.titlePage = 'Medals Per Country';
+    this.totalJOs = this.dataService.getTotalJOs(data);
+    this.countries = this.dataService.getCountries(data);
+    this.totalCountries = this.dataService.getCountries(data).length;
+    this.medalsData = this.dataService.getTotalCountryMedals(data);
+
+    this.statsInputs = [
+      { title: 'Number of Countries', data: this.totalCountries },
+      { title: 'Total JOs', data: this.totalJOs },
+    ];
+  }
+
+  private loadOlympicsData(): void {
     this.dataService.getOlympics().subscribe(
       (data: Olympic[]) => {
         if (data && data.length > 0) {
-          this.totalJOs = Array.from(
-            new Set(
-              data
-                .map((olympic: Olympic) =>
-                  olympic.participations.map(
-                    (participation) => participation.year,
-                  ),
-                )
-                .flat(),
-            ),
-          ).length;
-
-          this.countries = data.map((olympic: Olympic) => olympic.country);
-
-          this.totalCountries = this.countries.length;
-
-          const medals = data.map((olympic: Olympic) =>
-            olympic.participations.map(
-              (participation) => participation.medalsCount,
-            ),
-          );
-
-          this.medalsData = medals.map((medalCounts) =>
-            medalCounts.reduce((acc: number, count: number) => acc + count, 0),
-          );
+          this.setOlympicData(data);
         }
       },
 

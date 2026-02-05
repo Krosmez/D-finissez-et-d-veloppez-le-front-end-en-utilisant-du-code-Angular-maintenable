@@ -3,6 +3,7 @@ import { LineChartComponent } from 'src/app/components/line-chart/line-chart.com
 import { NgModule } from '@angular/core';
 import { PieChartComponent } from 'src/app/components/pie-chart/pie-chart.component';
 import { StatsCardComponent } from 'src/app/components/stats-card/stats-card.component';
+import { StatsHeaderComponent } from 'src/app/components/stats-header/stats-header.component';
 import { provideHttpClient } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
@@ -24,6 +25,7 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
     PieChartComponent,
     LineChartComponent,
     StatsCardComponent,
+    StatsHeaderComponent,
   ],
   providers: [provideHttpClient()],
   bootstrap: [AppComponent],

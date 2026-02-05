@@ -15,6 +15,7 @@ export class CountryComponent implements OnInit {
   public totalMedals: number = 0;
   public totalAthletes: number = 0;
   public error!: string;
+  public statsInputs: { title: string; data: number }[] = [];
 
   public medals: string[] = [];
   public years: number[] = [];
@@ -26,45 +27,44 @@ export class CountryComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    let countryName: string | null = null;
+    this.route.paramMap.subscribe((param: ParamMap) => {
+      const countryName = param.get('countryName');
+      if (countryName) {
+        this.loadCountryData(countryName);
+      } else {
+        this.router.navigate(['/404']);
+      }
+    });
+  }
 
-    this.route.paramMap.subscribe(
-      (param: ParamMap) => (countryName = param.get('countryName')),
+  private loadCountryData(countryName: string): void {
+    this.dataService.getOlympicsByCountry(countryName).subscribe(
+      (data: Olympic[]) => {
+        if (data && data.length > 0) {
+          console.log(data);
+          this.setCountryData(data[0]);
+        }
+      },
+      (error: HttpErrorResponse) => {
+        this.error = error.message;
+      },
     );
+  }
 
-    if (countryName) {
-      this.dataService.getOlympicsByCountry(countryName).subscribe(
-        (data: Olympic[]) => {
-          if (data && data.length > 0) {
-            const selectedCountry = data[0]; // Since filtered, take the first (and only) item
-            this.titlePage = selectedCountry.country;
-            this.totalEntries = selectedCountry.participations.length;
-            this.years = selectedCountry.participations.map(
-              (participation) => participation.year,
-            );
-            this.medals = selectedCountry.participations.map((participation) =>
-              participation.medalsCount.toString(),
-            );
-            this.totalMedals = this.medals.reduce(
-              (accumulator: number, item: string) =>
-                accumulator + parseInt(item),
-              0,
-            );
-            const nbAthletes = selectedCountry.participations.map(
-              (participation) => participation.athleteCount.toString(),
-            );
-            this.totalAthletes = nbAthletes.reduce(
-              (accumulator: number, item: string) =>
-                accumulator + parseInt(item),
-              0,
-            );
-          }
-        },
+  private setCountryData(data: Olympic): void {
+    this.titlePage = data.country;
+    this.totalEntries = data.participations.length;
+    this.totalMedals = this.dataService.sumCountryMedals(data);
+    this.totalAthletes = this.dataService.getTotalAthletes(data);
+    this.medals = data.participations.map((participation) =>
+      participation.medalsCount.toString(),
+    );
+    this.years = data.participations.map((participation) => participation.year);
 
-        (error: HttpErrorResponse) => {
-          this.error = error.message;
-        },
-      );
-    }
+    this.statsInputs = [
+      { title: 'Number of entries', data: this.totalEntries },
+      { title: 'Total Number of medals', data: this.totalMedals },
+      { title: 'Total Number of athletes', data: this.totalAthletes },
+    ];
   }
 }
